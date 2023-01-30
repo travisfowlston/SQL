@@ -1,0 +1,32 @@
+--Create a grocery store database
+
+create table grocery (id integer primary key, name text, quantity integer, price integer, popularity integer);
+
+insert into grocery values
+(1, "ice cream", 10, 4.99, 99),
+(2, "milk", 8, 4.99, 98),
+(3, "eggs", 12, 6.99, 95),
+(4, "creamer", 6, 5.99, 89),
+(5, "bananas", 10, .99, 85),
+(6, "lunch meat", 5, 9.99, 75),
+(7, "bread", 4, 6.99, 74),
+(8, "gum", 20, .99, 99),
+(9, "salad", 9, 5.99, 79),
+(10, "carrots", 10, 2.99, 72),
+(11, "green beans", 10, 3.99, 85),
+(12, "apples", 7, .99, 81),
+(13, "oranges", 7, 1.75, 86),
+(14, "cereal", 5, 2.99, 91),
+(15, "dark chocolate", 15, .99, 100);
+
+--display the database ordered by price.
+select * from grocery order by price desc;
+
+--what is the avg price of all the items?
+select avg(price) from grocery;
+
+--what are the 5 most popular items?
+select name, price, popularity 
+from grocery 
+order by popularity desc 
+limit 5;
