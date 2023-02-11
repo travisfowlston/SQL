@@ -1,0 +1,88 @@
+/* Create table about the people and what they do here */
+CREATE TABLE Famous_People 
+    (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    fullname TEXT,
+    birthdate TEXT);
+    
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Vin Diesel", "1967-07-18");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Tom Hanks", "1956-07-09");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Sandra Bullock", "1964-07-26");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Michelle Rodriguez", "1978-07-12");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Jason Statham", "1967-07-26");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Robin Wright", "1966-04-08");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Nina Dobrev", "1989-01-09");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("John Krasinski", "1979-10-20");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Emily Blunt", "1983-02-23");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Jenna Fischer", "1974-03-07");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Mila Kunis", "1983-08-14");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Ashton Kutcher", "1978-02-07");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Justin Timberlake", "1981-01-31");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Natalie Portman", "1981-06-09");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Blake Lively", "1987-08-25");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Ryan Reynolds", "1976-10-23");
+INSERT INTO Famous_People (fullname, birthdate) VALUES ("Jimmy O. Yang", "1987-06-11");
+
+CREATE TABLE Movies
+    (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    title TEXT,
+    released INTEGER, 
+    actor_id INTEGER);
+
+INSERT INTO Movies (title, released, actor_id) VALUES ("The Fast and the Furious", 2001, 1);
+INSERT INTO Movies (title, released, actor_id) VALUES ("The Fast and the Furious", 2001, 4);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Forrest Gump", 1994, 2); 
+INSERT INTO Movies (title, released, actor_id) VALUES ("Forrest Gump", 1994, 6); 
+INSERT INTO Movies (title, released, actor_id) VALUES ("The Heat", 2013, 3);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Resident Evil", 2002, 4);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Death Race", 2008, 5);
+INSERT INTO Movies (title, released, actor_id) VALUES ("The Princess Bride", 1987, 6);
+INSERT INTO Movies (title, released, actor_id) VALUES ("XXX: Return of Xander Cage", 2017, 7);
+INSERT INTO Movies (title, released, actor_id) VALUES ("A Quiet Place", 2018, 8);
+INSERT INTO Movies (title, released, actor_id) VALUES ("A Quiet Place", 2018, 9);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Hall Pass", 2011, 10);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Friends with Benefits", 2011, 11);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Friends with Benefits", 2011, 13);
+INSERT INTO Movies (title, released, actor_id) VALUES ("No Strings Attached", 2011, 12);
+INSERT INTO Movies (title, released, actor_id) VALUES ("No Strings Attached", 2011, 14);
+INSERT INTO Movies (title, released, actor_id) VALUES ("The Sisterhood of the Traveling Pants", 2005, 15);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Deadpool", 2016, 16);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Love Hard", 2021, 17);
+INSERT INTO Movies (title, released, actor_id) VALUES ("Love Hard", 2021, 7);
+
+CREATE TABLE Movie_Love_Interest 
+    (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    movie_id INTEGER, 
+    actor1_id INTEGER, 
+    actor2_id INTEGER);
+
+INSERT INTO Movie_Love_Interest (movie_id, actor1_id, actor2_id)
+    VALUES (1, 1, 4);
+INSERT INTO Movie_Love_Interest (movie_id, actor1_id, actor2_id)
+    VALUES (3, 2, 6);
+INSERT INTO Movie_Love_Interest (movie_id, actor1_id, actor2_id)
+    VALUES (10, 8, 9);
+INSERT INTO Movie_Love_Interest (movie_id, actor1_id, actor2_id)
+    VALUES (13, 11, 13);
+INSERT INTO Movie_Love_Interest (movie_id, actor1_id, actor2_id)
+    VALUES (15, 12, 14);
+INSERT INTO Movie_Love_Interest (movie_id, actor1_id, actor2_id)
+    VALUES (19, 17, 7);
+    
+--Which movies are each actors/actresses in?
+
+select FP.fullname as 'Actor', M.title as 'Movie_Title'
+from Famous_People FP
+    join Movies M
+    on FP.id = M.actor_id;
+
+--Which actors have a love interest in each movie?
+
+SELECT a.fullname AS love_interest_a, b.fullname AS love_interest_b, movies.title AS movie_title
+FROM Movie_Love_Interest
+    JOIN Famous_People a
+    ON Movie_Love_Interest.actor1_id = a.id
+    JOIN Famous_People b
+    ON Movie_Love_Interest.actor2_id = b.id
+    JOIN Movies
+    ON Movie_Love_Interest.actor1_id = Movies.actor_id
+GROUP By a.id;
