@@ -1,0 +1,45 @@
+#In this SQL code, I'm querying a database that's holding Nexflix data to answer questions about the data.
+
+--How many movie titles are there in the database? (movies only, not tv shows)
+select count(*)
+from "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+where type = 'Movie';
+
+--When was the most recent batch of tv shows and/or movies added to the database?
+select Max(date(date_added))
+from "CharlotteChaze/BreakIntoTech"."netflix_titles_info";
+
+--List all the movies and tv shows in alphabetical order.
+select title
+from "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+order by title asc;
+
+--Who was the Director for the movie Bright Star?
+select people.director, titles.title
+from "CharlotteChaze/BreakIntoTech"."netflix_people" people
+join "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+on people.show_id = titles.show_id
+where titles.title = 'Bright Star';
+
+--or
+select director
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+JOIN  "CharlotteChaze/BreakIntoTech"."netflix_people" people
+ON titles.show_id=people.show_id
+where titles.title='Bright Star';
+
+--What is the oldest movie in the database and what year was it made?
+select title, release_year
+from "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+where type = 'Movie'
+order by release_year asc
+limit 1;
+
+--or subquery to see all the oldest movies
+SELECT title, release_year 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie'
+AND release_year <= 
+(SELECT MIN(release_year) 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie');
