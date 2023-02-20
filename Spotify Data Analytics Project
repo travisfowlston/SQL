@@ -1,0 +1,105 @@
+-- For this project, I downloaded Spotify data on the top 50 songs in 2021 from Kaggle.
+-- I created a table in SQLite Studio to insert the Spotify data into.
+-- Then I inserted the Spotify Data .csv into the table.
+-- I explored the data and used SQL to answer some questions I had.
+-- At the bottom is also a description of the 14 variables about the songs.
+
+-- Here is the table:
+
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+song_key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+song_mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL );
+
+-- Below are the questions, with the SQL used to get the results I was looking for:
+
+-- #1. Who are all the artists?
+select artist_name
+from BIT_DB.Spotifydata
+group by artist_name;
+
+-- #2. Who has the most songs in this top 50 and how many do they have?
+select artist_name, count(artist_name) as Total_Songs
+from BIT_DB.Spotifydata
+group by artist_name
+order by count(artist_name) desc
+limit 2;
+
+-- #3. What are the names of Olivia Rodrigo's and Doja Cat's songs?
+select artist_name, track_name
+from BIT_DB.Spotifydata
+where artist_name = 'Olivia Rodrigo' 
+or artist_name = 'Doja Cat'
+order by artist_name asc;
+
+-- #4. What is the AVG Popularity?
+select avg(popularity)
+from BIT_DB.Spotifydata;
+
+-- #5. How many songs have a high, average, below average, and low popularity within this top 50?
+select count(*),
+    case
+        when popularity >= 90 then 'High Popularity'
+        when popularity >= 80 then 'Average Popularity'
+        when popularity >= 70 then 'Below Average Popularity'
+        else 'Poor Popularity'
+    end as 'Popularity_Rating'
+from BIT_DB.Spotifydata
+group by "Popularity_Rating"
+order by count(*) desc;
+
+-- #6. Who are the top 10 artists by popularity?
+select artist_name, popularity, track_name
+from BIT_DB.Spotifydata
+order by popularity desc
+limit 10;
+
+-- #7. Is there a relationship between popularity and song key? energy? tempo? speechiness? instrumentalness?
+select artist_name, track_name, popularity, song_key, energy, tempo, speechiness, instrumentalness
+from BIT_DB.Spotifydata
+order by popularity desc
+limit 10;
+
+-- #8. What's the average danceability for the 10 most popular songs
+select avg(danceability) as Avg_Danceability_TOP10
+from BIT_DB.Spotifydata
+order by popularity desc
+limit 10;
+
+-- #9. What artist released the longest song?
+select artist_name, track_name, duration_ms
+from BIT_DB.Spotifydata
+order by duration_ms desc
+limit 1;
+
+-- Description of the data in each column:
+
+-- Popularity - The higher the value the more popular the song is
+-- Danceability - The higher the value, the easier it is to dance to this song
+-- Energy - The energy of a song - the higher the value, the more energtic. song
+-- Key - the key the track is in. Integers map to pitches using standard Pitch Class notation. E.g. 0 = C, 1 = C♯/D♭, 2 = D, and so on. If no key was detected, the value is -1 (range: -1; 11)
+-- Loudness (dB) - The higher the value, the louder the song
+-- Mode - indicates the modality (major or minor) of a track, the type of scale from which its melodic content is derived. Major is represented by 1 and minor is 0
+-- Speechiness - The higher the value the more spoken word the song contains
+-- Acousticness - The higher the value the more acoustic the song is
+-- Instrumentalness - the number of vocals in a song. The closer the value to 1.0, the more instrumental the song is
+-- Liveness - The higher the value, the more likely the song is a live recording
+-- Valence - The higher the value, the more positive mood for the song
+-- Tempo - the overall estimated tempo of a track in beats per minute (BPM)
+-- Duration - duration of the song in ms
+--Time signature - an estimated time signature. The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of "3/4", to "7/4"
