@@ -1,7 +1,7 @@
 -- In this project, I am querying a database that holds data for bike lanes in a city. 
 -- For the two queries, I demonstarte how to use a Common Table Expression (CTE) and a Window Function to get the results I needed.
 
--- Your boss wants a list of all the bike lanes that have an average safety rating of 4.0 or higher. 
+-- #1. Your boss wants a list of all the bike lanes that have an average safety rating of 4.0 or higher. 
 -- She also wants to see the average safety rating for each of those bike lanes, and a label that says "Safe Lane".
 with safety_avg as (
 select street, avg(safetyrating) as Rating
@@ -13,7 +13,7 @@ from safety_avg
 where Rating >= 4
 order by Rating desc;
 
--- A list of all the bike lanes, both safety ratings for each lane, the average safety rating for each lane, 
+-- #2. A list of all the bike lanes, both safety ratings for each lane, the average safety rating for each lane, 
 -- and a label with the recommendation as "Remove", "Leave As-Is", or "Improvements Needed".
 select street, safetyrating, avg(safetyrating) over (partition by street) as "Average_Safety_Rating",
     case
