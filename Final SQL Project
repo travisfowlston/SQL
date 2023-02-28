@@ -1,0 +1,116 @@
+-- #1. Show Customers (their full names, customer ID, and country) who are not in the US. (Hint: != or <> can be used to say "is not equal to").
+select FirstName, LastName, CustomerId, Country
+from chinook.customers
+where Country <> 'USA';
+
+-- #2. Show only the Customers from Brazil.
+select *
+from chinook.customers
+where Country = 'Brazil';
+
+-- #3. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+select FirstName, LastName, InvoiceId, InvoiceDate, BillingCountry
+from chinook.invoices I
+join chinook.customers C
+on I.CustomerId = C.CustomerId
+where Country = 'Brazil';
+
+-- #4. Show the Employees who are Sales Agents.
+select *
+from chinook.employees
+where Title = 'Sales Support Agent';
+
+-- #5. Find a unique/distinct list of billing countries from the Invoice table.
+select distinct BillingCountry
+from chinook.invoices;
+
+-- #6. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+select FirstName, LastName, InvoiceId
+from chinook.employees E
+join chinook.customers C
+on E.EmployeeId = C.SupportRepId
+join chinook.invoices I
+on C.CustomerId = I.CustomerId;
+
+-- #7. Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+select I.InvoiceId, I.Total, C.FirstName as Cust_FirstName, C.LastName as Cust_LastName, C.Country as Cust_Country, E.FirstName as Rep_FirstName, E.LastName as Rep_LastName
+from chinook.employees E
+join chinook.customers C
+on E.EmployeeId = C.SupportRepId
+join chinook.invoices I
+on C.CustomerId = I.CustomerId;
+
+-- #8. How many Invoices were there in 2009?
+select count(*) as Total_Invoices_2009
+from chinook.invoices
+where InvoiceDate like '2009%';
+
+-- #9 What are the total sales for 2009?
+select sum(Total) as Total_Sales_2009
+from chinook.invoices
+where InvoiceDate like '2009%';
+
+-- #10. Write a query that includes the purchased track name with each invoice line ID.
+select T.Name as track_name, II.InvoiceLineId as invoice_line_ID
+from chinook.tracks T
+join chinook.invoice_items II
+on T.TrackId = II.TrackId;
+
+-- #11. Write a query that includes the purchased track name AND artist name with each invoice line ID.
+select A.Name as artist_name, T.Name as track_name, II.InvoiceLineId as invoice_line_ID
+from chinook.tracks T
+join chinook.invoice_items II
+on T.TrackId = II.TrackId
+join chinook.albums AL
+on AL.Albumid = T.Albumid
+join chinook.artists A
+on A.Artistid = AL.Artistid;
+
+-- #12. Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+select T.Name as 'Track Name', AL.Title as 'Album Name', MT.Name as 'Media Type', G.Name as 'Genre'
+from chinook.tracks T
+join chinook.albums AL
+on T.Albumid = AL.Albumid
+join chinook.media_types MT
+on T.MediaTypeid = MT.MediaTypeid
+join chinook.genres G
+on T.Genreid = G.Genreid;
+
+-- #13. Show the total sales made by each sales agent.
+select E.FirstName as 'Rep First Name', E.LastName as 'Rep Last Name', Round(sum(I.Total), 2) as 'Total Sales'
+from chinook.employees E
+join chinook.customers C
+on E.Employeeid = C.SupportRepid
+join chinook.invoices I
+on C.Customerid = I.Customerid
+group by E.FirstName
+order by I.Total desc;
+
+-- #14. Which sales agent made the most dollars in sales in 2009?
+select E.FirstName as 'Rep First Name', E.LastName as 'Rep Last Name', Round(sum(I.Total), 2) as 'Total Sales'
+from chinook.employees E
+join chinook.customers C
+on E.Employeeid = C.SupportRepid
+join chinook.invoices I
+on C.Customerid = I.Customerid
+where I.Invoicedate like '2009%'
+group by E.FirstName
+order by Round(sum(I.Total), 2) desc
+limit 1;
+
+-- #15. Show all customers whose support representative is Steve Johnson. Include customers full name, country, and email.
+select C.FirstName as 'Customer First Name', C.LastName as 'Customer Last Name', C.Country, C.Email
+from chinook.customers C
+join chinook.employees E
+on C.SupportRepid = E.Employeeid
+where E.FirstName = 'Steve' and E.LastName = 'Johnson'
+order by C.FirstName asc;
+
+-- #16. Who are the top 5 artists with the most albums?
+select A.Name, count(AL.title) as 'Number of Albums'
+from chinook.artists A
+join chinook.albums AL
+on A.Artistid = AL.Artistid
+group by A.Name
+order by count(AL.title) desc
+limit 5;
