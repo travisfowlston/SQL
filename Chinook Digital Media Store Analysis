@@ -2,7 +2,7 @@
 -- for artists, albums, media tracks, invoices, and customers(as well as a few others). 
 -- I am querying some questions that I had about this dataset. Below are the questions and its queries.
 
--- #1. Show Customers (their full names, customer ID, and country) who are not in the US. (Hint: != or <> can be used to say "is not equal to").
+-- #1. Show Customers (their full names, customer ID, and country) who are not in the US.
 select FirstName, LastName, CustomerId, Country
 from chinook.customers
 where Country <> 'USA';
